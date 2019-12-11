@@ -5,6 +5,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <ctime>
 #include <dlib/dnn.h>
+#include <mainwindow.h>
 #include <dlib/clustering.h>
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/image_processing/render_face_detections.h>

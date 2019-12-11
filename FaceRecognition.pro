@@ -14,9 +14,8 @@ LIBS += -LC:\\Users\\Gevorg\\Desktop\\Gevorg\\programming\\classic\\dlib-19.18\\
 INCLUDEPATH += C:/Users/Gevorg/Desktop/Gevorg/programming/classic/opencv/build/include
 LIBS += -LC:\\Users\\Gevorg\\Desktop\\Gevorg\\programming\\classic\\opencv\\build\\x64\\vc15\\lib\
     -lopencv_world412
-
-LIBS += -LC:\\Users\\Gevorg\\Desktop\\Gevorg\\programming\\classic\\sqlite\
-    -lsqlite3
+INCLUDEPATH += C:\\Users\\Gevorg\\Desktop\\Gevorg\\programming\\classic\\sqlite
+LIBS += -LC:\\Users\\Gevorg\\Desktop\\Gevorg\\programming\\classic\\sqlite -lsqlite3
 
 SOURCES += \
     ../../Desktop/Gevorg/programming/classic/dlib-19.18/source/dlib/all/source.cpp \
@@ -26,7 +25,8 @@ SOURCES += \
 
 HEADERS += \
     database.h \
-    mainwindow.h
+    mainwindow.h \
+    takeimage.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
