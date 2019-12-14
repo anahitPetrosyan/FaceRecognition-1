@@ -1,6 +1,7 @@
 #ifndef TAKEIMAGE_H
 #define TAKEIMAGE_H
 
+#pragma once
 #include <vector>
 #include <iostream>
 #include <dlib/opencv.h>
@@ -37,28 +38,27 @@ public:
         {
             std::cout << "Unable to connect to camera" << std::endl;
         }
-
-    //    image_window win;
         frontal_face_detector detect  = get_frontal_face_detector();
         shape_predictor pose_model;
-        deserialize("/home/anahit/Downloads/shape_predictor_5_face_landmarks.dat") >> pose_model;
+        deserialize("C:\\Users\\Gevorg\\source\\repos\\Test\\Test\\shape_predictor_5_face_landmarks.dat") >> pose_model;
         int i = 0;
         while(i < 10)
         {
 
             Mat image;
             cap >> image;
-
             cv_image<bgr_pixel> cimg(image);
-            std::vector<dlib::rectangle> faces = detect(cimg);
+            std::vector<dlib::rectangle> faces;
             std::vector<cv::Rect> opencvRects;
+            int k = faces.size();
+            faces = detect(cimg);
             dlib_rect2cv_Rect(opencvRects,faces);
             for(int j = 0; j < opencvRects.size(); j++)
             {
                 if(opencvRects[j].x >= 0 && opencvRects[j].y >= 0 && opencvRects[j].width + opencvRects[j].x < image.cols && opencvRects[j].height + opencvRects[j].y < image.rows)
                 {
                     crop = image(opencvRects[j]);
-                    path = folderpath+"/" +name+"_" +std::to_string(i)+".jpg";
+                    path = folderpath+"/" +name+"_" +std::to_string(i + 1)+".jpg";
                     cv::resize(crop,resized,Size(150,150));
                     imwrite(path,resized);
                     imagePath.push_back(path);
@@ -67,7 +67,8 @@ public:
             namedWindow("win",WINDOW_AUTOSIZE);
             imshow("win",image);
             waitKey(1);
-            i++;
+            if(faces.size() > k)
+                i++;
         }
         return imagePath;
     }

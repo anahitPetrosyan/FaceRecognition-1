@@ -1,3 +1,6 @@
+#include <faceRecognition.h>
+#include <database.h>
+#include <QApplication>
 #include <vector>
 #include <iostream>
 #include <dlib/opencv.h>
@@ -5,7 +8,6 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <ctime>
 #include <dlib/dnn.h>
-#include <mainwindow.h>
 #include <dlib/clustering.h>
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/image_processing/render_face_detections.h>
@@ -261,12 +263,15 @@ string recognizier(std::map<string,std::vector<std::vector<float>>> my_map, std:
         for (auto k : my_map[p]) {
             dist = euqlidesis_distance(k, vec);
 
-            if (dist < min_dist){
+            if(dist < 0.45){
+                cout << "dist == " << dist << endl;
+                return p;
+            }
+            else if (dist < min_dist){
                 i = 0;
                 min_dist = dist;
                 name = p;
             }
-
             else if (i <= my_map[p].size()) {i++;}
             else{break;}
         }
@@ -463,12 +468,22 @@ void imageFaceDetect() {
 }
 
 
-int main()try
+int main(int argc,char* argv[])try
 {
-    string path = "C:\\Users\\Gevorg\\source\\repos\\Test\\Test\\TestSet1";
-    FaceDescriptionExtractor f;
-    f.load(path);
-    videoFaceDetect();
+//    string path = "C:\\Users\\Gevorg\\source\\repos\\Test\\Test\\TestSet1";
+//    FaceDescriptionExtractor f;
+//    f.load(path);
+//    videoFaceDetect();
+    QApplication a(argc,argv);
+    faceRecognition w;
+    w.show();
+    return a.exec();
+//    DataBase db;
+//    std::vector<PersonInfo> p;
+//    p = db.SelectPersonInfo();
+//    for (auto i : p){
+//        cout << i.name << " " << i.lastName << " " << i.officeName << " "  << i.position<< " "  << endl;
+//    }
 }
 
 catch (const std::exception& ex)

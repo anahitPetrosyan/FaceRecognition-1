@@ -20,12 +20,15 @@ LIBS += -LC:\\Users\\Gevorg\\Desktop\\Gevorg\\programming\\classic\\sqlite -lsql
 SOURCES += \
     ../../Desktop/Gevorg/programming/classic/dlib-19.18/source/dlib/all/source.cpp \
     ../../Desktop/Gevorg/programming/classic/sqlite/sqlite3.c \
-    main.cpp \
-    mainwindow.cpp
+    UpdateInfo.cpp \
+    database.cpp \
+    faceRecognition.cpp \
+    main.cpp
 
 HEADERS += \
+    UpdateInfo.h \
     database.h \
-    mainwindow.h \
+    faceRecognition.h \
     takeimage.h
 
 # Default rules for deployment.
