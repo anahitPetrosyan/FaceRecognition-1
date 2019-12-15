@@ -25,24 +25,55 @@
 #include "takeimage.h"
 #include "database.h"
 using namespace std;
-
+static int iter = 0;
 faceRecognition::faceRecognition(QWidget *parent): QWidget(parent)
 {
     this->setMinimumSize(1500,500);
 //    this->setFixedSize(900,500);
-    createMembers();
-    setMembers();
-    setupLayouts();
-    connection();
+    if (iter == 1) {
+
+        model->clear();
+        createMembers();
+        setMembers();
+        setupLayouts();
+        connection();
+    }
+    iter++;
     //   mPersonDataStruct->deserialize(mJsonpath);
     //    PersonDataStruct *pobj =  new PersonDataStruct;
 }
+
+string ID;
+std::vector<PersonInfo> p;
 
 faceRecognition::~faceRecognition()
 {
 
 }
+void faceRecognition::update_table(){
+    DataBase db1;
+    this->repaint();
 
+    std::vector<PersonInfo> p1 = db1.SelectPersonInfo();
+    cout << p1.size();
+    for (int i = 0; i < p1.size(); i++){
+        verticalHeader.append(QString::fromUtf8(to_string(i + 1).c_str()));
+         item = new QStandardItem(QString::fromUtf8(to_string(p1[i].id).c_str()));
+         model->setItem(i, 0, item);
+
+         item = new QStandardItem(QString::fromUtf8(p1[i].name.c_str()));
+         model->setItem(i, 1, item);
+
+         item = new QStandardItem(QString::fromUtf8(p1[i].lastName.c_str()));
+         model->setItem(i, 2, item);
+
+         item = new QStandardItem(QString::fromUtf8(p1[i].officeName.c_str()));
+         model->setItem(i, 3, item);
+
+         item = new QStandardItem(QString::fromUtf8(p1[i].position.c_str()));
+         model->setItem(i, 4, item);
+    }
+}
 void faceRecognition::createMembers()
 {
     m_addPerson = new QPushButton;
@@ -82,6 +113,7 @@ void faceRecognition::createMembers()
 
 }
 
+
 void faceRecognition::setMembers()
 {
     m_name_label->setText("Name:");
@@ -96,6 +128,7 @@ void faceRecognition::setMembers()
     m_job_label->setText("Job:");
     m_job_label->setAlignment(Qt::AlignCenter);
 
+
     m_setFirstName->setMaxLength(20);
     m_setFirstName->setFixedSize(200,30);
 
@@ -108,6 +141,7 @@ void faceRecognition::setMembers()
     m_setJob->setMaxLength(20);
     m_setJob->setFixedSize(200,30);
 
+
     m_delete->setText("Delete");
     m_delete->setFixedSize(200,30);
 
@@ -118,37 +152,51 @@ void faceRecognition::setMembers()
     m_id->setPlaceholderText("Enter ID");
 
     DataBase db;
-    std::vector<PersonInfo> p;
-
+    if(p.size() > 0){
+        p.clear();
+    }
     p = db.SelectPersonInfo();
+    model->clear();
     horizontalHeader.append("ID");
     horizontalHeader.append("Name");
     horizontalHeader.append("Last Name");
     horizontalHeader.append("Office");
     horizontalHeader.append("Position");
 
+    cout << p.size() << endl;
+    model->clear();
     for (int i = 0; i < p.size(); i++){
         verticalHeader.append(QString::fromUtf8(to_string(i + 1).c_str()));
          item = new QStandardItem(QString::fromUtf8(to_string(p[i].id).c_str()));
          model->setItem(i, 0, item);
+
          item = new QStandardItem(QString::fromUtf8(p[i].name.c_str()));
          model->setItem(i, 1, item);
+
          item = new QStandardItem(QString::fromUtf8(p[i].lastName.c_str()));
          model->setItem(i, 2, item);
+
          item = new QStandardItem(QString::fromUtf8(p[i].officeName.c_str()));
          model->setItem(i, 3, item);
+
          item = new QStandardItem(QString::fromUtf8(p[i].position.c_str()));
          model->setItem(i, 4, item);
     }
+    p.clear();
     model->setHorizontalHeaderLabels(horizontalHeader);
     model->setVerticalHeaderLabels(verticalHeader);
+
     result->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     result->resizeRowsToContents();
+
     VerticalBox->setFixedSize(500,500);
     result->setFixedSize(690,500);
     result->resizeColumnsToContents();
+
     m_addPerson->setText("Add");
     m_addPerson->setFixedSize(200,40);
+    result->setModel(model);
+
     DelGroupBox->setFixedSize(300,300);
 }
 
@@ -180,7 +228,7 @@ void faceRecognition::setupLayouts()
 
     VerticalBox->setLayout(VLay);
     //    HorBox->setLayout(HLay);
-    result->setModel(model);
+
     DelGroupBox->setLayout(VLayDel);
 
     MainHorizontalLay->addWidget(DelGroupBox);
@@ -232,6 +280,7 @@ void faceRecognition::onAddButtonClicked()
             //stringImagePath = photos.takeImageFromVideo("/home/anahit/Desktop/testImages",name);
             this->repaint();
             db.InsertData(name,lastName,officeName,job,stringImagePath);
+            //update_table();
         }
 
     }
@@ -247,17 +296,24 @@ void faceRecognition::onAddButtonClicked()
 
 }
 
+string faceRecognition::take_id(){
+
+    return ID;
+
+}
 
 void faceRecognition::onUpdateButtonClicked(){
-    string ID = m_id->text().toStdString();
+    this->repaint();
+    ID = m_id->text().toStdString();
     UpdateInfo update;
     update.show();
     QEventLoop l;
     l.exec();
 }
-
 void faceRecognition::onDeleteButtonClicked(){
     string str = m_id->text().toStdString();
     DataBase db;
+    this->repaint();
     db.DeleteById(str);
+    //update_table();
 }

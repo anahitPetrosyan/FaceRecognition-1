@@ -16,6 +16,7 @@
 #include <dlib/image_io.h>
 #include <dlib/string.h>
 #include <opencv2/opencv.hpp>
+#include <UpdateInfo.h>
 #include <experimental/filesystem>
 #include <time.h>
 #include "C:/Users/Gevorg/Downloads/json.h"
@@ -475,7 +476,9 @@ int main(int argc,char* argv[])try
 //    f.load(path);
 //    videoFaceDetect();
     QApplication a(argc,argv);
+    UpdateInfo up;
     faceRecognition w;
+    up.takeFaceRec(w);
     w.show();
     return a.exec();
 //    DataBase db;

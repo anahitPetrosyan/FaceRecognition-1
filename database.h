@@ -95,7 +95,10 @@ public:
 
     Info SelectInfo(string name);
 
+    PersonInfo SelectInfoByID(string id);
+
     std::vector<Info> SelectVecInfo();
+
     vector<PersonInfo> SelectPersonInfo();
 private:
     void OpenDb()

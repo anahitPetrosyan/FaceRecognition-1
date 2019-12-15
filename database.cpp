@@ -118,7 +118,7 @@ void DataBase::UpdateById(string id,string name,string lastName,string office,st
     sql = "UPDATE PERSONDATA SET NAME = '"+name+"', LAST_NAME = '"+lastName+"', OFFICE_NAME = '"+office+"', POSITION = '"+position+"' WHERE ID="+(id)+";";
     rc = sqlite3_exec(db,sql.c_str(),callback,(void*)"d\n",&zErrMsg);
     if (rc != SQLITE_OK) {
-        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        fprintf(stderr, "SQL Update error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
     sqlite3_close(db);
@@ -146,7 +146,7 @@ void DataBase::InsertData(string NameValue, string LastNameValue, string OfficeN
 
     if(rc != SQLITE_OK || isInserted  != SQLITE_OK)
     {
-        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        fprintf(stderr, "SQL Insert error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
 
@@ -173,7 +173,25 @@ Info DataBase::SelectInfo(string name)
 
     if(worked != SQLITE_OK && worked2 != SQLITE_OK)
     {
-        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        fprintf(stderr, "SQL Select info error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }
+    sqlite3_close(db);
+    return info;
+}
+
+PersonInfo DataBase::SelectInfoByID(string id){
+    OpenDb();
+    string sql;
+    int worked;
+    char *zErrMsg = 0;
+    PersonInfo info;
+    sql = "SELECT * FROM PERSONDATA WHERE ID = '"+id+"';";
+    worked = sqlite3_exec(db,sql.c_str(),selectCallback,&info,&zErrMsg);
+
+    if(worked != SQLITE_OK)
+    {
+        fprintf(stderr, "SQL select info by id error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
     sqlite3_close(db);
@@ -196,7 +214,7 @@ vector<PersonInfo> DataBase::SelectPersonInfo()    {
     PersonInfo personInfo;
     //    sql = "SELECT COUNT(ID) FROM PERSONDATA";
     //    worked2 = sqlite3_exec(db,sql.c_str(),selectCountCallback,&count,&zErrMsg);
-
+    pvec.clear();
     sql2 = "SELECT * FROM PERSONDATA";
     worked = sqlite3_exec(db,sql2.c_str(),selectPersonInfoCallback,&personInfo,&zErrMsg);
 

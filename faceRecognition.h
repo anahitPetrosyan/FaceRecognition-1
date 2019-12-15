@@ -6,6 +6,7 @@
 #include "QStandardItem"
 #include <QWidget>
 #include <QMessageBox>
+#include <string>
 class QPushButton;
 class QLineEdit;
 class QTableView;
@@ -16,7 +17,7 @@ class QFrame;
 class QHBoxLayout;
 class QGroupBox;
 class QTextEdit;
-
+using namespace std;
 class faceRecognition : public QWidget
 {
     Q_OBJECT
@@ -28,7 +29,9 @@ public slots:
     void onAddButtonClicked();
     void onDeleteButtonClicked();
     void onUpdateButtonClicked();
-    //    void onOpenButtonClicked();
+
+    void update_table();
+    string take_id();
 
 signals:
     void personDateEmmiter(QString name, QString lastName, QString officeName, QString job);
